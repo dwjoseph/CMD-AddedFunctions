@@ -52,7 +52,7 @@ Select enter
                 --items I'd like to see developed
                 -- Auto scroll to bottom of list box with new items
                 -- Window flashes as new items come in / no flash when paused
-                -- 
+                -- Masking disabled - Line 236 & 1037
 
                 
 #>
@@ -158,7 +158,7 @@ Function Clear-Viewer {
                             <MenuItem x:Name = 'Open_URLs' Header = 'Open Selected URLs'/> 
                             <MenuItem x:Name = 'Open_Google_Search' Header = 'Open Selected in Google'/>
                             <MenuItem x:Name = 'Open_with_NOTEPAD' Header = 'Open Selected in NOTEPAD'/>                                                         
-                            <MenuItem x:Name = 'Mask_Selected_Item' Header = 'Mask Selected Item'/>
+                            <MenuItem x:Name = 'Mask_Selected_Item' Header = 'Mask Selected Item - Disabled'/>
                             <MenuItem x:Name = 'zzzz' Header = '------------------------'/>
                             <MenuItem x:Name = 'ChatGPT' Header = 'Ask ChatGPT'/>                              
                         </ContextMenu>
@@ -233,12 +233,15 @@ $Clear_Menu.Add_Click({
 $MaskSelectedItem.Add_Click(
 { 
 
+    # return # disabled till further notice......
+<#
     $applyMask = [System.Windows.MessageBox]::Show("This will mask (Hide) all future like items. Select with caution.`r`rCurrent Like Value:$global:HideCopiedItems", "Reset in Options", "YesNo", "Question")
                 
                 if ($applyMask -eq "Yes")
                 {
                     $global:HideCopiedItems += $listbox.SelectedItems[0]
                 }
+#>
 
     
     # Not Working..... Attempting to cycle through all values and mask items found as a LIKE match
@@ -881,6 +884,7 @@ $Window.ShowDialog() | Out-Null
     })
 
     $Window.Add_SourceInitialized({
+        
         #Create observable collection # 12/5
         $Script:ObservableCollection = New-Object System.Collections.ObjectModel.ObservableCollection[string]
         
@@ -889,6 +893,12 @@ $Window.ShowDialog() | Out-Null
         #Create Timer object
         $Script:timer = new-object System.Windows.Threading.DispatcherTimer 
         $timer.Interval = [TimeSpan]"0:0:.1"
+
+
+# 3/14
+#[System.Windows.Forms.MessageBox]::Show('111111111111', 'Info', 'OK', [System.Windows.Forms.MessageBoxIcon]::Information)
+
+
 
         #Add event per tick
         $timer.Add_Tick({
@@ -1013,21 +1023,27 @@ $Window.ShowDialog() | Out-Null
 
 
                            
-                                    if ($global:HideCopiedItems -match $text) 
+
+                                    <#
+                                    if ($global:HideCopiedItems.ToString() -match $text) 
                                     {     
                                         [void]$Script:ObservableCollection.Add("*************")                                                 
 
                                     }else
                                     {
-                                        [void]$Script:ObservableCollection.Add($text)
+                                        [void]$Script:ObservableCollection.Add($text)    
                                     }
-
+                                    #>
+                                    [void]$Script:ObservableCollection.Add($text)
               
                                                 
 } else # Line 867 & 868 (If menu items selected = $Pause_Menu & $AddTime_Menu)
 {
                             
-                if ($global:HideCopiedItems -match $text) 
+
+                        
+                <#
+                if ($global:HideCopiedItems.ToString() -match $text) 
                                 {
                                     [void]$Script:ObservableCollection.Add("*************  : " + (Get-Date -Format "dddd MM/dd/yyyy HH:mm:ss"))
                                                                         
@@ -1035,6 +1051,9 @@ $Window.ShowDialog() | Out-Null
                                 {
                                     [void]$Script:ObservableCollection.Add($text + " : " + (Get-Date -Format "dddd MM/dd/yyyy HH:mm:ss"))
                                 }
+                                #>
+
+                                [void]$Script:ObservableCollection.Add($text + " : " + (Get-Date -Format "dddd MM/dd/yyyy HH:mm:ss"))
                     }                       
                 }
 
