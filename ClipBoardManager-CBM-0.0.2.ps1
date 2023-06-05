@@ -196,6 +196,32 @@ $Runspacehash.Handle = $Runspacehash.PowerShell.AddScript({
             $global:ReviewLog = $scriptPath + "\ClipBoardManager-CBM-ReviewLog.txt"
          
             #[System.Windows.Forms.MessageBox]::Show("Path: $global:ReviewLog", 'Info-54342343243', 'OK', [System.Windows.Forms.MessageBoxIcon]::Information)
+
+
+            #-----------------------------------------------------
+
+# 3/5
+#$defaultText = "Example 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"
+[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') | Out-Null
+$AddComment = [Microsoft.VisualBasic.Interaction]::InputBox("Insert a comment on top of log entry items. `n(or leave blank)", "Insert Comment", $defaultText)
+
+        #If ((($global:chatGPTapiKey -eq "Cancel") -or ($global:chatGPTapiKey -eq "") -or ($global:chatGPTapiKey -eq $null)))
+        #{
+
+            #[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') | Out-Null
+            #[System.Windows.Forms.MessageBox]::Show('A value must exist - Please provide API key.', 'Info-21PPPPPP76', 'OK', [System.Windows.Forms.MessageBoxIcon]::Information)
+                            
+            #return
+        
+        #}
+
+
+        
+
+            #-----------------------------------------------------
+            # Add comment to log entries....... # 6/5/23 - Issue where always goes back to filter box - hrrrrrrrrrrrr
+            $AddComment = "`n$AddComment"
+            $AddComment | Out-File $global:ReviewLog -Append
             
             if (-not (Test-Path -Path $global:ReviewLog)) {
                 New-Item -ItemType File -Path $global:ReviewLog -Force
@@ -219,8 +245,8 @@ $Runspacehash.Handle = $Runspacehash.PowerShell.AddScript({
             }
 
 
-            
-
+            $AddComment  = $null
+            $return
                 
                
 
@@ -1393,8 +1419,10 @@ $Window.ShowDialog() | Out-Null
         }
     })
     
-    $Window.Add_Activated({ #6/4
-        $InputBox.Focus()
+    $Window.Add_Activated({ #6/5
+        #$InputBox.Focus()
+        #$InputBox.Hide
+        #$InputBox.IsEnabled
     })
 
     $Window.Add_SourceInitialized({
@@ -1599,8 +1627,8 @@ $Window.ShowDialog() | Out-Null
         $Runspacehash.PowerShell.Dispose()
     })
 
-    $InputBox.Add_TextChanged({ #6/4/23
-        <#
+    $InputBox.Add_TextChanged({ #6/5/23
+        #<#
         [System.Windows.Data.CollectionViewSource]::GetDefaultView($Listbox.ItemsSource).Filter = [Predicate[Object]]{             
             Try {
                 $args[0] -match [regex]::Escape($InputBox.Text)
@@ -1612,6 +1640,7 @@ $Window.ShowDialog() | Out-Null
 
 #--------------------------------------
 
+<#
 # Get the list of items as an array
 $items = $Listbox.Items | ForEach-Object { $_ }
 
@@ -1644,6 +1673,7 @@ if ($showSurroundingItems) {
         $True
     }
 }
+#>
 
 #-----------------------------------------
         
